@@ -1,3 +1,3 @@
-from frontPage import mainCreate
+from ui.frontPage import mainCreate
 
 mainCreate()

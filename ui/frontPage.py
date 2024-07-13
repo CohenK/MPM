@@ -1,9 +1,11 @@
+import sys
+#sys.path.append('/home/cohenk/PassMan/classes/')
 from tkinter import *
-from os.path import exists
-from profile import Profile
+from os.path import exists, dirname
+from classes import Profile
 import pickle
-import display
-import helper
+from ui import display
+from utils import helper
 import PIL.Image
 import PIL.ImageTk
 
@@ -15,7 +17,7 @@ def mainCreate():
 
     root = Tk()
     root.geometry("1200x800")
-    programIconPath = helper.resourcePath("Icons\\lock_and_key.png")
+    programIconPath = helper.resourcePath("assets/Icons/lock_and_key.png")
     programIcon = PIL.Image.open(programIconPath)
     rProgramIcon = PIL.ImageTk.PhotoImage(programIcon)
     root.tk.call('wm', 'iconphoto', root._w, rProgramIcon)
@@ -58,7 +60,7 @@ def mainCreate():
             
             return
         else:
-            filepath = helper.resourcePath(str("Profile\\" + user + ".txt"))
+            filepath = helper.resourcePath(str("Profile/" + user + ".txt"))
             
             if not exists(filepath):
                 message = "This user does not exists."
@@ -97,7 +99,7 @@ def mainCreate():
             newAccountUser = user
             global newAccountPass
             newAccountPass = password
-            filepath = helper.resourcePath(str("Profile\\" + newAccountUser + ".txt"))
+            filepath = helper.resourcePath(str("Profile/" + newAccountUser + ".txt"))
             if exists(filepath):
                 message = "This user already exists."
                 helper.errorWindow(message, screen_width, screen_height)

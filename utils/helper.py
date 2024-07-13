@@ -24,7 +24,7 @@ def entryQOF(input, executedFunction, message):
 
 def errorWindow(errorMessage, sw, sh):
     errorWindow = Toplevel()
-    errorIconPath = resourcePath("Icons\\error.png")
+    errorIconPath = resourcePath("assets/Icons/error.png")
     errorIcon = PIL.Image.open(errorIconPath)
     rErrorIcon = PIL.ImageTk.PhotoImage(errorIcon)
     errorWindow.tk.call('wm', 'iconphoto', errorWindow._w, rErrorIcon)
@@ -215,8 +215,9 @@ def resourcePath(file_name):
     else:
         try:
             app_full_path = path.realpath(__file__)
-            application_path = path.dirname(app_full_path)
+            application_path = path.dirname(path.dirname(app_full_path))
         except NameError:
             application_path = getcwd()
+
     full_path = path.join(application_path, file_name)
     return full_path

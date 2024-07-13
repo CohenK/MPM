@@ -1,8 +1,8 @@
 from tkinter import *
 from tkinter import ttk
 from typing import OrderedDict
-import helper
-import clipboard as clip
+from utils import helper
+import pyperclip
 import pickle
 import PIL.Image
 import PIL.ImageTk
@@ -36,7 +36,7 @@ def create(current, callback):
         if len(tree.selection()) == 0:
             return
         password = record['values'][2]
-        clip.copy(password)
+        pyperclip.copy(password)
 
     def destroyAllRecords():
         for row in tree.get_children():
@@ -85,10 +85,10 @@ def create(current, callback):
         global searchWindow
         searchWindow = Toplevel(padx=5, pady=7, bg=mainColor)
         searchWindow.geometry("350x125")
-        searchIconPath = helper.resourcePath("Icons\\search.png")
-        searchIcon = PIL.Image.open(searchIconPath)
-        rSearchIcon = PIL.ImageTk.PhotoImage(searchIcon)
-        searchWindow.tk.call('wm', 'iconphoto', searchWindow._w, rSearchIcon)
+        # searchIconPath = helper.resourcePath("Icons\\search.png")
+        # searchIcon = PIL.Image.open(searchIconPath)
+        # rSearchIcon = PIL.ImageTk.PhotoImage(searchIcon)
+        #searchWindow.tk.call('wm', 'iconphoto', searchWindow._w)
         searchWindow.title("MPM Search Box")
         searchWindow.minsize(350, 125)
         searchWindow.maxsize(350, 125)
@@ -112,10 +112,10 @@ def create(current, callback):
     def addTool():
         addWindow = Toplevel(bg=mainColor)
         addWindow.geometry("650x400")
-        addIconPath = helper.resourcePath("Icons\\add.png")
-        addIcon = PIL.Image.open(addIconPath)
-        rAddIcon = PIL.ImageTk.PhotoImage(addIcon)
-        addWindow.tk.call('wm', 'iconphoto', addWindow._w, rAddIcon)
+        # addIconPath = helper.resourcePath("Icons\\add.png")
+        # addIcon = PIL.Image.open(addIconPath)
+        # rAddIcon = PIL.ImageTk.PhotoImage(addIcon)
+        #addWindow.tk.call('wm', 'iconphoto', addWindow._w)
         addWindow.minsize(650, 400)
         helper.windowCentering(addWindow, 650, 400, addWindow.winfo_screenwidth(), addWindow.winfo_screenheight())
 
@@ -171,7 +171,7 @@ def create(current, callback):
         helper.generateLayout(addWindow, newPass, screen_width, screen_height)
 
     def exitApp():
-        filepath = helper.resourcePath(str("Profile\\" + current.getUser() + ".txt"))
+        filepath = helper.resourcePath(str("Profile/" + current.getUser() + ".txt"))
         helper.decrypt(filepath)
         f = open(filepath, "wb")
         f.truncate(0)
@@ -230,10 +230,10 @@ def create(current, callback):
         global editWindow
         editWindow = Toplevel(padx=5, pady=7, bg=mainColor)
         editWindow.geometry("550x150")
-        editIconPath = helper.resourcePath("Icons\\edit.png")
-        editIcon = PIL.Image.open(editIconPath)
-        rEditIcon = PIL.ImageTk.PhotoImage(editIcon)
-        editWindow.tk.call('wm', 'iconphoto', editWindow._w, rEditIcon)
+        # editIconPath = helper.resourcePath("Icons\\edit.png")
+        # editIcon = PIL.Image.open(editIconPath)
+        # rEditIcon = PIL.ImageTk.PhotoImage(editIcon)
+        #editWindow.tk.call('wm', 'iconphoto', editWindow._w)
         editWindow.title("MPM Edit Window")
         editWindow.minsize(550, 150)
         editWindow.maxsize(550, 150)
@@ -272,7 +272,7 @@ def create(current, callback):
     root = Tk()
     root.minsize(750, 400)
     root.title("MY PASSWORD MANAGER")
-    programIconPath = helper.resourcePath("Icons\\lock_and_key.png")
+    programIconPath = helper.resourcePath("assets/Icons/lock_and_key.png")
     programIcon = PIL.Image.open(programIconPath)
     rProgramIcon = PIL.ImageTk.PhotoImage(programIcon)
     root.tk.call('wm', 'iconphoto', root._w, rProgramIcon)
