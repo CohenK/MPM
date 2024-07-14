@@ -3,9 +3,9 @@ import sys
 from tkinter import *
 from os.path import exists, dirname
 from classes import Profile
-import pickle
-from ui import display
+from ui import content
 from utils import helper
+import pickle
 import PIL.Image
 import PIL.ImageTk
 
@@ -17,7 +17,7 @@ def mainCreate():
 
     root = Tk()
     root.geometry("1200x800")
-    programIconPath = helper.resourcePath("assets/Icons/lock_and_key.png")
+    programIconPath = helper.resource_path("assets/Icons/lock_and_key.png")
     programIcon = PIL.Image.open(programIconPath)
     rProgramIcon = PIL.ImageTk.PhotoImage(programIcon)
     root.tk.call('wm', 'iconphoto', root._w, rProgramIcon)
@@ -28,7 +28,7 @@ def mainCreate():
     '''Making app centered'''
     screen_width = root.winfo_screenwidth()
     screen_height = root.winfo_screenheight()
-    helper.windowCentering(root, 1000, 800, root.winfo_screenwidth(), root.winfo_screenheight())
+    helper.window_centering(root, 1000, 800, root.winfo_screenwidth(), root.winfo_screenheight())
 
     root.grid_columnconfigure(0, weight=1)
     root.grid_rowconfigure(0, weight=2)
@@ -56,31 +56,29 @@ def mainCreate():
         loginPass.insert(0, "(Password)")
         if (len(user) == 0 or len(password) == 0):
             message = "Please enter your credentials."
-            helper.errorWindow(message, screen_width, screen_height)
+            helper.error_window(message, screen_width, screen_height)
             
             return
         else:
-            filepath = helper.resourcePath(str("Profile/" + user + ".txt"))
+            filepath = helper.resource_path(str("Profile/" + user + ".enc"))
             
             if not exists(filepath):
                 message = "This user does not exists."
-                helper.errorWindow(message, screen_width, screen_height)
-                
+                helper.error_window(message, screen_width, screen_height)
                 return
-            helper.decrypt(filepath)
-            f = open(filepath, "rb")
+            
             global userProfile
-            userProfile = pickle.load(f)
-            f.close()
-            helper.encrypt(filepath)
-            if (password != userProfile.getPassword()):
+            userProfile = helper.read_decrypt_file(filepath, password)
+
+            helper.write_encrypt_file(filepath, userProfile, password)
+            if not userProfile:
                 userProfile = None
                 message = "Incorrect credentials, please try again."
-                helper.errorWindow(message, screen_width, screen_height)
+                helper.error_window(message, screen_width, screen_height)
                 
                 return
             root.destroy()
-            display.create(userProfile, mainCreate)
+            content.view(userProfile, mainCreate)
 
     def newAccount():
         user = newUser.get().strip()
@@ -91,7 +89,7 @@ def mainCreate():
         newPass.insert(0, "(Password)")
         if (len(user) == 0 or len(password) == 0):
             message= "Please enter your credentials."
-            helper.errorWindow(message, screen_width, screen_height)
+            helper.error_window(message, screen_width, screen_height)
             
             return
         else:
@@ -99,17 +97,15 @@ def mainCreate():
             newAccountUser = user
             global newAccountPass
             newAccountPass = password
-            filepath = helper.resourcePath(str("Profile/" + newAccountUser + ".txt"))
-            if exists(filepath):
+            filepath = helper.resource_path(str("Profile/" + newAccountUser + ".enc"))
+            if exists(filepath + ".enc"):
                 message = "This user already exists."
-                helper.errorWindow(message, screen_width, screen_height)
+                helper.error_window(message, screen_width, screen_height)
                 return
-            f = open(filepath, "wb")
+
             profiles = dict()
             profiles[newAccountUser] = Profile(newAccountUser, newAccountPass)
-            pickle.dump(profiles[newAccountUser], f)
-            f.close()
-            helper.encrypt(filepath)
+            helper.write_encrypt_file(filepath, profiles[newAccountUser], password)
 
     def showPassword(button, entry):
         if entry.get() == "(Password)":
@@ -150,8 +146,8 @@ def mainCreate():
     loginButton = Button(loginFrame, text="Login", font=('Calibri 16 bold'), padx = 55, background="#9DBDD0", activebackground="white", command=login)
     loginUser = Entry(loginFrame, font=('Calibri 16'), justify=CENTER, bd=5)
     loginPass = Entry(loginFrame, font=('Calibri 16'), justify=CENTER, bd=5)
-    helper.entryQOF(loginUser, login, "(Username)")
-    helper.entryQOF(loginPass, login, "(Password)")
+    helper.entry_QOF(loginUser, login, "(Username)")
+    helper.entry_QOF(loginPass, login, "(Password)")
     loginShowPassword = Button(loginFrame, text="Show Password", background="#9DBDD0", padx = 40, activebackground="white", command=lambda: showPassword(loginShowPassword, loginPass))
     loginPass.bind("<Button-1>", loginOnClick)
     loginPass.bind("<FocusOut>", loginUnfocus)
@@ -160,8 +156,8 @@ def mainCreate():
     newAccountButton = Button(newFrame, text="Create Account", font=('Calibri 16 bold'), padx = 12, background="#9DBDD0", activebackground="white", command=newAccount)
     newUser = Entry(newFrame, font=('Calibri 16'), justify=CENTER, bd=5)
     newPass = Entry(newFrame, font=('Calibri 16'), justify=CENTER, bd=5)
-    helper.entryQOF(newUser, newAccount, "(Username)")
-    helper.entryQOF(newPass, newAccount, "(Password)")
+    helper.entry_QOF(newUser, newAccount, "(Username)")
+    helper.entry_QOF(newPass, newAccount, "(Password)")
     newShowPassword = Button(newFrame, text="Show Password", background="#9DBDD0", padx = 40, activebackground="white", command=lambda: showPassword(newShowPassword ,newPass))
     newPass.bind("<Button-1>", newOnClick)
     newPass.bind("<FocusOut>", newUnfocus)

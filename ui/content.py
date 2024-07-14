@@ -8,17 +8,16 @@ import PIL.Image
 import PIL.ImageTk
 
 
-def create(current, callback):
-
-    mainColor = '#69A090'
+def view(current, callback):
+    main_color = '#69A090'
 
     #functions
     def sortNDict(data, result):
-        sortedList = sorted(data.items())
-        for item in sortedList:
+        sorted_list = sorted(data.items())
+        for item in sorted_list:
             temp = dict(item[1])
-            innerSort = sorted(temp.items())
-            result[str(item[0])] = OrderedDict(innerSort)
+            inner_sort = sorted(temp.items())
+            result[str(item[0])] = OrderedDict(inner_sort)
     
     def deleteRecord():
         record = tree.item(tree.focus())
@@ -29,7 +28,7 @@ def create(current, callback):
         if current.deleteUser(site, username):
             tree.delete(tree.selection()[0])
         else:
-            helper.errorWindow("No such record exists.", screen_width, screen_height)
+            helper.error_window("No such record exists.", screen_width, screen_height)
 
     def copyPassword():
         record = tree.item(tree.focus())
@@ -58,7 +57,7 @@ def create(current, callback):
         message = ""
         if username == "(Username to be searched)":
             message = "Nothing entered"
-            helper.errorWindow(message, screen_width, screen_height)
+            helper.error_window(message, screen_width, screen_height)
             return
 
         if len(results) == 0:
@@ -66,7 +65,7 @@ def create(current, callback):
                 message = "Nothing entered"
             else:
                 message = "No such username is in this database"
-            helper.errorWindow(message, screen_width, screen_height)    
+            helper.error_window(message, screen_width, screen_height)    
             return
 
         destroyAllRecords()
@@ -83,16 +82,16 @@ def create(current, callback):
 
     def searchTool():
         global searchWindow
-        searchWindow = Toplevel(padx=5, pady=7, bg=mainColor)
+        searchWindow = Toplevel(padx=5, pady=7, bg=main_color)
         searchWindow.geometry("350x125")
-        # searchIconPath = helper.resourcePath("Icons\\search.png")
+        # searchIconPath = helper.resource_path("Icons\\search.png")
         # searchIcon = PIL.Image.open(searchIconPath)
         # rSearchIcon = PIL.ImageTk.PhotoImage(searchIcon)
         #searchWindow.tk.call('wm', 'iconphoto', searchWindow._w)
         searchWindow.title("MPM Search Box")
         searchWindow.minsize(350, 125)
         searchWindow.maxsize(350, 125)
-        helper.windowCentering(searchWindow, 350, 125, searchWindow.winfo_screenwidth(), searchWindow.winfo_screenheight())
+        helper.window_centering(searchWindow, 350, 125, searchWindow.winfo_screenwidth(), searchWindow.winfo_screenheight())
         searchWindow.focus_set()
         searchWindow.grid_rowconfigure(0, weight=2)
         searchWindow.grid_rowconfigure(1, weight=1)
@@ -102,22 +101,22 @@ def create(current, callback):
 
         global searchEntry
         searchEntry = Entry(searchWindow, font=('Calibri 16'), justify=LEFT, bd=2)
-        helper.entryQOF(searchEntry, query, "(Username to be searched)")
+        helper.entry_QOF(searchEntry, query, "(Username to be searched)")
         searchEntry.grid(row=1, column=0, sticky='NSEW')
-        helper.unfocusEntry(searchWindow, searchEntry)
+        helper.unfocus_entry(searchWindow, searchEntry)
 
         searchButton = Button(searchWindow, bg="#16cca8", fg='black', activeforeground='black', text='Search', command=query, width=7)
         searchButton.grid(row=1, column=1, sticky='NSEW')
 
     def addTool():
-        addWindow = Toplevel(bg=mainColor)
+        addWindow = Toplevel(bg=main_color)
         addWindow.geometry("650x400")
-        # addIconPath = helper.resourcePath("Icons\\add.png")
+        # addIconPath = helper.resource_path("Icons\\add.png")
         # addIcon = PIL.Image.open(addIconPath)
         # rAddIcon = PIL.ImageTk.PhotoImage(addIcon)
         #addWindow.tk.call('wm', 'iconphoto', addWindow._w)
         addWindow.minsize(650, 400)
-        helper.windowCentering(addWindow, 650, 400, addWindow.winfo_screenwidth(), addWindow.winfo_screenheight())
+        helper.window_centering(addWindow, 650, 400, addWindow.winfo_screenwidth(), addWindow.winfo_screenheight())
 
         addWindow.focus_set()
         addWindow.grid_rowconfigure(0, weight=1)
@@ -137,7 +136,7 @@ def create(current, callback):
             newPass.insert(0, "(NEW PASSWORD)")
 
             if site == '' or site == '(NEW SITE)' or user == '' or user == '(NEW USER)' or password == '' or password == '(NEW PASSWORD)':
-                helper.errorWindow("One or more fields is empty.", screen_width, screen_height)
+                helper.error_window("One or more fields is empty.", screen_width, screen_height)
                 return 
             if current.addSite(site, user, password):
                 temp = OrderedDict()
@@ -145,15 +144,15 @@ def create(current, callback):
                 sortNDict(current.getAccounts(), temp)
                 insertRecords(temp)
             else:
-                helper.errorWindow("Record already exists.", screen_width, screen_height)
+                helper.error_window("Record already exists.", screen_width, screen_height)
 
         addHolder = Frame(addWindow, padx=10, pady=5, relief=SUNKEN, bg='#69A090')
         newSite = Entry(addHolder, font=('Calibri 16'), justify=LEFT, bd=2)
-        helper.entryQOF(newSite, addRecord, "(NEW SITE)")
+        helper.entry_QOF(newSite, addRecord, "(NEW SITE)")
         newUser = Entry(addHolder, font=('Calibri 16'), justify=LEFT, bd=2)
-        helper.entryQOF(newUser, addRecord, "(NEW USER)")
+        helper.entry_QOF(newUser, addRecord, "(NEW USER)")
         newPass = Entry(addHolder, font=('Calibri 16'), justify=LEFT, bd=2)
-        helper.entryQOF(newPass, addRecord, "(NEW PASSWORD)")
+        helper.entry_QOF(newPass, addRecord, "(NEW PASSWORD)")
         addAdd = Button(addHolder, text="ADD RECORD", bg="#16cca8", fg='black', activeforeground='black', command=addRecord)
         addHolder.grid(row=0, column=0, sticky='NSEW')
         addHolder.grid_rowconfigure(0, weight=2)
@@ -168,16 +167,13 @@ def create(current, callback):
         newPass.grid(row=1, column=2, sticky='NSEW')
         addAdd.grid(row=2, column=0, columnspan=3, sticky='NSEW')
 
-        helper.generateLayout(addWindow, newPass, screen_width, screen_height)
+        helper.generate_layout(addWindow, newPass, screen_width, screen_height)
 
     def exitApp():
-        filepath = helper.resourcePath(str("Profile/" + current.getUser() + ".txt"))
-        helper.decrypt(filepath)
-        f = open(filepath, "wb")
-        f.truncate(0)
-        pickle.dump(current, f)
-        f.close()
-        helper.encrypt(filepath)
+        filepath = helper.resource_path(str("Profile/" + current.getUser() + ".enc"))
+        password = current.getPassword()
+        # helper.read_decrypt_file(filepath, password)
+        helper.write_encrypt_file(filepath, current ,password)
         root.destroy()
 
     def logout():
@@ -210,12 +206,12 @@ def create(current, callback):
             if current.addSite(site, userInput, password):
                 current.deleteUser(site, username)
             else:
-                helper.errorWindow("Record already exists.", screen_width, screen_height)
+                helper.error_window("Record already exists.", screen_width, screen_height)
         elif not len(passInput) == 0 and not len(userInput) == 0:
             if current.addSite(site, userInput, passInput):
                 current.deleteUser(site, username)
             else:
-                helper.errorWindow("Record already exists.", screen_width, screen_height)
+                helper.error_window("Record already exists.", screen_width, screen_height)
         
         temp = OrderedDict()
         destroyAllRecords()
@@ -228,16 +224,16 @@ def create(current, callback):
         if len(tree.selection()) == 0:
             return
         global editWindow
-        editWindow = Toplevel(padx=5, pady=7, bg=mainColor)
+        editWindow = Toplevel(padx=5, pady=7, bg=main_color)
         editWindow.geometry("550x150")
-        # editIconPath = helper.resourcePath("Icons\\edit.png")
+        # editIconPath = helper.resource_path("Icons\\edit.png")
         # editIcon = PIL.Image.open(editIconPath)
         # rEditIcon = PIL.ImageTk.PhotoImage(editIcon)
         #editWindow.tk.call('wm', 'iconphoto', editWindow._w)
         editWindow.title("MPM Edit Window")
         editWindow.minsize(550, 150)
         editWindow.maxsize(550, 150)
-        helper.windowCentering(editWindow, 550, 150, editWindow.winfo_screenwidth(), editWindow.winfo_screenheight())
+        helper.window_centering(editWindow, 550, 150, editWindow.winfo_screenwidth(), editWindow.winfo_screenheight())
         editWindow.focus_set()
         editWindow.grid_rowconfigure(0, weight=2)
         editWindow.grid_rowconfigure(1, weight=1)
@@ -248,12 +244,12 @@ def create(current, callback):
 
         global editUserEntry
         editUserEntry = Entry(editWindow, font=('Calibri 16'), justify=LEFT, bd=2)
-        helper.entryQOF(editUserEntry, edit, "(Username to be editted)")
+        helper.entry_QOF(editUserEntry, edit, "(Username to be editted)")
         editUserEntry.grid(row=1, column=0, sticky='NSEW')
         
         global editPassEntry
         editPassEntry = Entry(editWindow, font=('Calibri 16'), justify=LEFT, bd=2)
-        helper.entryQOF(editPassEntry, edit, "(Password to be editted)")
+        helper.entry_QOF(editPassEntry, edit, "(Password to be editted)")
         editPassEntry.grid(row=1, column=1, sticky='NSEW')
         
         editButton = Button(editWindow, bg="#16cca8", fg='black', activeforeground='black', text='Edit', command=edit, width=7)
@@ -272,7 +268,7 @@ def create(current, callback):
     root = Tk()
     root.minsize(750, 400)
     root.title("MY PASSWORD MANAGER")
-    programIconPath = helper.resourcePath("assets/Icons/lock_and_key.png")
+    programIconPath = helper.resource_path("assets/Icons/lock_and_key.png")
     programIcon = PIL.Image.open(programIconPath)
     rProgramIcon = PIL.ImageTk.PhotoImage(programIcon)
     root.tk.call('wm', 'iconphoto', root._w, rProgramIcon)
@@ -284,7 +280,7 @@ def create(current, callback):
 
     screen_width = root.winfo_screenwidth()
     screen_height = root.winfo_screenheight()
-    helper.windowCentering(root, 750, 400, root.winfo_screenwidth(), root.winfo_screenheight())
+    helper.window_centering(root, 750, 400, root.winfo_screenwidth(), root.winfo_screenheight())
     root.protocol("WM_DELETE_WINDOW", exitApp)
     root.rowconfigure(0, weight=14)
     root.rowconfigure(1, weight=1, minsize=60)
