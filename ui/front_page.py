@@ -3,14 +3,16 @@ import sys
 from tkinter import *
 from os.path import exists, dirname
 from classes import Profile
-from ui import content
+from ui import content_ui
 from utils import helper
 import pickle
 import PIL.Image
 import PIL.ImageTk
+from ui.display_ui import Display
 
 def mainCreate():
 
+    
     mainColor = '#69A090'
     secondaryColor = '#A3D09D'
     
@@ -78,7 +80,8 @@ def mainCreate():
                 
                 return
             root.destroy()
-            content.view(userProfile, mainCreate)
+            display = Display(userProfile, mainCreate)
+            display.run()
 
     def newAccount():
         user = newUser.get().strip()
