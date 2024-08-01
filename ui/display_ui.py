@@ -174,6 +174,16 @@ class Display:
         self.generate_button.grid(row=0, column=4, sticky='NSEW', padx=5, pady=5)
         self.new_password.grid(row=0, column=5, sticky='NSEW', padx=5, pady=5)
 
+        def select_all(event):
+            event.widget.select_range(0,tk.END)
+            event.widget.icursor(tk.END)
+        def on_focus(entry):
+            entry.delete(0,tk.END)
+        def focus_out(entry, message):
+            text = entry.get().strip()
+            if text == '':
+                entry.insert(0,message)
+
         self.lower_chars.insert(0,'lower')
         self.upper_chars.insert(0,'upper')
         self.num_chars.insert(0,'number')
@@ -186,15 +196,10 @@ class Display:
         self.upper_chars.bind("<FocusOut>",lambda event: focus_out(self.upper_chars, 'upper'))
         self.num_chars.bind("<FocusOut>",lambda event: focus_out(self.num_chars, 'number'))
         self.special_chars.bind("<FocusOut>",lambda event: focus_out(self.special_chars,'special'))
+        self.lower_chars.bind_class("Entry", "<Control-a>", select_all)
 
         self.display_frame.bind_all("<Button-1>", self.determine_focus)
 
-        def on_focus(entry):
-            entry.delete(0,tk.END)
-        def focus_out(entry, message):
-            text = entry.get().strip()
-            if text == '':
-                entry.insert(0,message)
         
         self.logic = Logic(self.root, self.display_frame,self.menu_bar, self.tree,self.search_entry,self.search_button,self.back_button,
                            self.current_site, self.current_user, self.current_pass, self.clear_button,self.edit_button,self.delete_button,self.add_button,

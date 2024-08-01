@@ -27,7 +27,6 @@ class Login():
         self.root = root
         self.root.config(menu=None)
         self.call_display = call_display
-        
 
         self.main_login_frame = tk.Frame(self.root, bg=primary_lighter)
         self.main_login_frame.grid(row=0,column=0, sticky="NSEW")
@@ -75,6 +74,10 @@ class Login():
                     self.main_login_frame.focus_set()
             except Exception as error:
                 print(error)
+        
+        def select_all(event):
+            event.widget.select_range(0,tk.END)
+            event.widget.icursor(tk.END)
 
         #login UI
         self.login_frame = tk.Frame(self.title_frame, bg=secondary_light, pady=30)        
@@ -127,6 +130,7 @@ class Login():
         self.show_new_password = tk.Button(self.new_buttons_frame, text="Show Password", bg=thirtiary_light, fg='black', activebackground=thirtiary_color, activeforeground='black', font=('Calibri 12'), pady=5, command=lambda: self.show_password(self.show_new_password ,self.new_pass))
         self.new_pass.bind("<Button-1>", new_on_click)
         self.new_pass.bind("<FocusOut>", new_unfocus)
+        self.new_pass.bind_class("Entry","<Control-a>", select_all)
         self.new_title.grid(row=0,column=0)
         self.new_user.grid(row=1, column=0, pady=5, ipady=5)
         self.new_pass.grid(row=2, column=0, pady=5, ipady=5)

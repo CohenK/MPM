@@ -77,10 +77,6 @@ class Logic:
         self.destroy_all_records()
         self.insert_records(temp)
     
-    def password_generation(self):
-        helper.generate_pass(self.lower_chars, self.upper_chars, self.num_chars, self.special_chars, self.new_password, 500, 300)
-        self.tree.focus()
-    
     def add_record(self):
             site = self.current_site.get().strip()
             user = self.current_user.get().strip()
@@ -132,20 +128,6 @@ class Logic:
 
     #     helper.generate_layout(addWindow, newPass, self.screen_width, self.screen_height)
 
-    def treeview_select(self, event):
-        record = self.tree.item(self.tree.focus())
-        
-        if record['values'] == '':
-            return
-        self.prev = record
-        site=record['values'][0]
-        username=record['values'][1]
-        password=record['values'][2]
-        self.clear_current_selected()
-        self.current_site.insert(0, site)
-        self.current_user.insert(0, username)
-        self.current_pass.insert(0, password)
-    
     def on_tree_left_click(self,event):
         row = self.tree.identify_row(event.y)
         if not row:
@@ -169,29 +151,31 @@ class Logic:
         self.current_site.delete(0, tk.END)
         self.current_user.delete(0, tk.END)
         self.current_pass.delete(0, tk.END)
-
     
     def edit_account(self):
-            if not self.prev:
-                helper.error_window("No record was selected.", self.screen_width, self.screen_height)
-                return
-            prev_site=self.prev['values'][0]
-            prev_username=self.prev['values'][1]
-            prev_password=self.prev['values'][2]
-            site=self.current_site.get().strip()
-            username=self.current_user.get().strip()
-            password=self.current_pass.get().strip()
+        if not self.prev:
+            helper.error_window("No record was selected.", self.screen_width, self.screen_height)
+            return
+        prev_site=self.prev['values'][0]
+        prev_username=self.prev['values'][1]
+        prev_password=self.prev['values'][2]
+        site=self.current_site.get().strip()
+        username=self.current_user.get().strip()
+        password=self.current_pass.get().strip()
 
 
-            if len(site) == 0 or len(username) == 0 or len(password)==0:
-                self.clear_current_selected()
-                self.current_site.insert(0,prev_site)
-                self.current_user.insert(0,prev_username)
-                self.current_pass.insert(0,prev_password)
-                helper.error_window("Some fields are missing.", self.screen_width, self.screen_height)
-                return
+        if len(site) == 0 or len(username) == 0 or len(password)==0:
             self.clear_current_selected()
+            self.current_site.insert(0,prev_site)
+            self.current_user.insert(0,prev_username)
+            self.current_pass.insert(0,prev_password)
+            helper.error_window("Some fields are missing.", self.screen_width, self.screen_height)
+            return
+        self.clear_current_selected()
 
+        dialog = helper.Confirmation_Window(self.root, 'Are you sure you want to make this change?')
+        self.root.wait_window(dialog)
+        if dialog.result.get():
             if site == prev_site and username == prev_username and password != prev_password:
                 self.profile.updatePassword(site,username,password)
             else:
@@ -291,14 +275,15 @@ class Logic:
         if not site or not username or not password:
             helper.error_window("Incomplete record information.", self.screen_width, self.screen_height)
             return
+        dialog = helper.Confirmation_Window(self.root, 'Are you sure you want to make this change?')
+        self.root.wait_window(dialog)
+        if dialog.result.get():
+            if self.profile.deleteUser(site, username):
+                self.prev = None
+                self.display_current_records()
+            else:
+                helper.error_window("No such record exists.", self.screen_width, self.screen_height)
 
-        if self.profile.deleteUser(site, username):
-            self.prev = None
-            self.display_current_records()
-        else:
-            helper.error_window("No such record exists.", self.screen_width, self.screen_height)
-
-    
     def copy_account_password(self):
         record = self.tree.item(self.tree.focus())
         if len(self.tree.selection()) == 0:
@@ -417,6 +402,5 @@ class Logic:
         except Exception as error:
             print(error)
             
-
     def run(self):
         self.root.mainloop()

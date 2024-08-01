@@ -50,6 +50,7 @@ def entry_QOF(input, executed_function, message):
     input.bind("<Return>", entry_enter)
 
 
+
 def error_window(error_message, sw = 750, sh = 100):
     error_window = Toplevel()
     error_icon_path = resource_path("assets/Icons/error.png")
