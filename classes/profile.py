@@ -6,11 +6,17 @@ class Profile:
         self.password = password
         self.accounts = defaultdict(dict)
 
-    def getUser(self):
+    def getUser(self)->str:
         return self.user
 
-    def getPassword(self):
+    def getPassword(self)->str:
         return self.password
+    
+    def setUser(self,user):
+        self.user = user
+
+    def setPassword(self,password):
+        self.password = password
 
     def addSite(self, site,username, accountPassword):
         if site in self.accounts:

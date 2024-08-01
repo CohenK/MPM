@@ -1,3 +1,4 @@
-from ui.front_page import mainCreate
+from ui.main_window_ui import Main_Window
 
-mainCreate()
+main = Main_Window()
+main.run()

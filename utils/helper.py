@@ -16,8 +16,26 @@ import os
 from base64 import urlsafe_b64encode, urlsafe_b64decode
 from getpass import getpass
 import secrets
+import pyperclip
 
-def entry_QOF(input, executedFunction, message):
+
+primary_color = '#226666'
+primary_lighter = "#407F7F"
+primary_light = '#669999'
+primary_darker = '#0D4D4D'
+primary_dark = '#003333'
+
+secondary_color = '#2E4172'
+secondary_light = '#7887AB'
+secondary_lighter = '#4F628E'
+secondary_darker = '#162955'
+secondary_dark = '#061539'
+
+thirtiary_color = '#AA6C39'
+thirtiary_light = '#D49A6A'
+thirtiary_dark = '#804515'
+
+def entry_QOF(input, executed_function, message):
     input.insert(0, message)
     def clear_entry(event):
         if input.get() == message:
@@ -26,40 +44,73 @@ def entry_QOF(input, executedFunction, message):
         if input.get() == "":
             input.insert(0, message)
     def entry_enter(event):
-        executedFunction()
+        executed_function()
     input.bind("<FocusOut>", unfocused_entry)
     input.bind("<FocusIn>", clear_entry)
     input.bind("<Return>", entry_enter)
 
 
-def error_window(error_message, sw = 750, sh = 75):
+def error_window(error_message, sw = 750, sh = 100):
     error_window = Toplevel()
     error_icon_path = resource_path("assets/Icons/error.png")
     error_icon = PIL.Image.open(error_icon_path)
     r_error_icon = PIL.ImageTk.PhotoImage(error_icon)
     error_window.tk.call('wm', 'iconphoto', error_window._w, r_error_icon)
+    error_window.config(bg=primary_color)
+    error_window.grid_rowconfigure(0,weight=1)
+    error_window.grid_rowconfigure(1,weight=1)
+    error_window.grid_columnconfigure(0,weight=1)
 
     error_window.title("MPM Error Detected")
-    error_window.minsize(750,75)
-    error_window.maxsize(750,75)
-    '''making errorwindow centered'''
-    window_centering(error_window, 750, 75, error_window.winfo_screenwidth(), error_window.winfo_screenheight())
+    error_window.minsize(750,100)
+    error_window.maxsize(750,100)
+    window_centering(error_window, 750, 100, error_window.winfo_screenwidth(), error_window.winfo_screenheight())
     
     def kill_error_window():
         error_window.destroy()
 
-    error_message = Label(error_window, text=error_message, font=("Calibri 16"))
-    okButton = Button(error_window, text = "OK", padx=15 ,command =kill_error_window, bg="#16cca8")
+    error_message = Label(error_window, text=error_message, font=("Calibri 16 bold"), bg=primary_color)
+    okButton = Button(error_window, bg=thirtiary_light, fg='black', activebackground=thirtiary_color, activeforeground='black', text = "OK", padx=15 ,command =kill_error_window)
     def enterKey(event):
         kill_error_window()
     error_window.bind("<Return>", enterKey)
-
-
     error_message.grid(row=0, column=0)
-    okButton.grid(row=1, column=0)
-    error_window.grid_columnconfigure(0, weight=1)
+    okButton.grid(row=1, column=0, sticky="N")
     error_window.focus_set()
 
+
+class Confirmation_Window(Toplevel):
+    def __init__(self,parent,message):
+        super().__init__(parent)
+        self.result = BooleanVar()
+        self.title("MPM Confirmation")
+        self.geometry("750x100")
+        self.config(bg=primary_color)
+        self.minsize(750,100)
+        self.maxsize(750,100)
+        self.grab_set()
+        window_centering(self, 750, 100, self.winfo_screenwidth(), self.winfo_screenheight())
+        self.grid_columnconfigure(0, weight=1)
+        self.grid_columnconfigure(1, weight=1)
+        self.focus_set()
+
+        label = Label(self, text=message, bg=primary_color)
+        label.config(font=('Calibri',14,'bold'))
+        confirm_button= Button(self, bg=thirtiary_light, fg='black', activebackground=thirtiary_color, activeforeground='black', text = "Confirm", padx=15 ,command=self.confirm)
+        cancel_button= Button(self, bg=thirtiary_light, fg='black', activebackground=thirtiary_color, activeforeground='black', text = "Cancel", padx=15 ,command=self.cancel)
+        confirm_button.config(font=('Calibri',10,'bold'))
+        cancel_button.config(font=('Calibri',10,'bold'))
+        label.grid(row=0, column=0, columnspan=2, pady=10)
+        confirm_button.grid(row=1, column=0, sticky='E',padx=10, pady=5)
+        cancel_button.grid(row=1, column=1, sticky='W',padx=10, pady=5)
+
+    def confirm(self):
+        self.result.set(True)
+        self.destroy()
+
+    def cancel(self):
+        self.result.set(False)
+        self.destroy() 
     
 def generate_password(lower, upper, numbers, special):
     lower_chars = string.ascii_uppercase
@@ -86,57 +137,54 @@ def generate_pass(numLower, numUpper, numNumber, numSpecial, newPass, screen_wid
     upper = 0
     num = 0
     special = 0
-    if numLower.get() == '':
+    def reset_entry(entry, message):
+        entry.delete(0,END)
+        entry.insert(0,message)
+
+    if numLower.get() == 'lower':
         pass
     else:
         if numLower.get().strip().isdigit():
             lower = int(numLower.get())
-            numLower.delete(0, END)
-            numLower.insert(0, '0')
+            reset_entry(numLower,'lower')
         else:
             error_window("One or more inputs are not positive integers.", screen_width, screen_height)
-            numLower.delete(0, END)
-            numLower.insert(0, '0')
+            reset_entry(numLower,'lower')
             return
-    if numUpper.get() == '':
+    if numUpper.get() == 'upper':
         pass
     else:
         if numUpper.get().strip().isdigit():
             upper = int(numUpper.get())
-            numUpper.delete(0, END)
-            numUpper.insert(0, '0')
+            reset_entry(numUpper,'upper')
         else:
             error_window("One or more inputs are not positive integers.", screen_width, screen_height)
-            numUpper.delete(0, END)
-            numUpper.insert(0, '0')
+            reset_entry(numUpper,'upper')
             return
-    if numNumber.get() == '':
+    if numNumber.get() == 'number':
         pass
     else:
         if numNumber.get().strip().isdigit():
             num = int(numNumber.get())
-            numNumber.delete(0, END)
-            numNumber.insert(0, '0')
+            reset_entry(numNumber,'number')
         else:
             error_window("One or more inputs are not positive integers.", screen_width, screen_height)
-            numNumber.delete(0, END)
-            numNumber.insert(0, '0')
+            reset_entry(numNumber,'number')
             return
-    if numSpecial.get() == '':
+    if numSpecial.get() == 'special':
         pass
     else:
         if numSpecial.get().strip().isdigit():
             special = int(numSpecial.get())
-            numSpecial.delete(0, END)
-            numSpecial.insert(0, '0')
+            reset_entry(numSpecial,'special')
         else:
             error_window("One or more inputs are not positive integers.", screen_width, screen_height)
-            numSpecial.delete(0, END)
-            numSpecial.insert(0, '0')
+            reset_entry(numSpecial,'special')
             return
     generatedPassword = generate_password(lower, upper, num, special)
     newPass.delete(0, END)
     newPass.insert(0, generatedPassword)
+    pyperclip.copy(generatedPassword)
 
 def generate_layout(window, newPass, screen_width, screen_height):
     passHolder = Frame(window, padx=10, pady=5, relief=SUNKEN, bg='#69A090')
