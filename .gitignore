@@ -1,0 +1,21 @@
+# Ignore virtual environment directory
+myenv/
+
+# Ignore token.pickle file
+token.pickle
+
+# Ignore Python cache files
+__pycache__/
+*.pyc
+*.pyo
+
+
+ui/__pycache__/
+utils/__pycache__/
+
+client_secret_868314137781-m73562gquoduj597folqfg27qu51f14j.apps.googleusercontent.com.json:Zone.Identifier
+client_secret_868314137781-m73562gquoduj597folqfg27qu51f14j.apps.googleusercontent.com.json:shield
+ui/__pycache__/__init__.cpython-312.pyc
+ui/__pycache__/display_logic.cpython-312.pyc
+ui/__pycache__/display_ui.cpython-312.pyc
+ui/__pycache__/login_ui.cpython-312.pyc

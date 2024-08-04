@@ -73,7 +73,7 @@ class Login():
                 if currentWidget not in (self.login_user, self.login_pass, self.new_user, self.new_pass):
                     self.main_login_frame.focus_set()
             except Exception as error:
-                print(error)
+                return
         
         def select_all(event):
             event.widget.select_range(0,tk.END)
@@ -99,7 +99,7 @@ class Login():
         self.login_buttons_frame.grid_columnconfigure(0,weight=1)
         self.login_button = tk.Button(self.login_buttons_frame, text="Login", bg=thirtiary_light, fg='black', activebackground=thirtiary_color, activeforeground='black', font=('Calibri 14 bold'), padx = 55, pady=10, command=self.login)
         self.show_login_password = tk.Button(self.login_buttons_frame, text="Show Password", bg=thirtiary_light, fg='black', activebackground=thirtiary_color, activeforeground='black', font=('Calibri 12'), pady=5, command=lambda: self.show_password(self.show_login_password, self.login_pass))
-        self.login_pass.bind("<Button-1>", login_on_click)
+        self.login_pass.bind("<FocusIn>", login_on_click)
         self.login_pass.bind("<FocusOut>", login_unfocus)
         self.login_title.grid(row=0,column=0)
         self.login_user.grid(row=1, column=0, pady=5, ipady=5)
@@ -128,7 +128,7 @@ class Login():
         self.new_buttons_frame.grid_columnconfigure(0,weight=1)
         self.new_account_button = tk.Button(self.new_buttons_frame, text="Create", bg=thirtiary_light, fg='black', activebackground=thirtiary_color, activeforeground='black', font=('Calibri 14 bold'), padx = 53, pady=10, command=self.new_account)
         self.show_new_password = tk.Button(self.new_buttons_frame, text="Show Password", bg=thirtiary_light, fg='black', activebackground=thirtiary_color, activeforeground='black', font=('Calibri 12'), pady=5, command=lambda: self.show_password(self.show_new_password ,self.new_pass))
-        self.new_pass.bind("<Button-1>", new_on_click)
+        self.new_pass.bind("<FocusIn>", new_on_click)
         self.new_pass.bind("<FocusOut>", new_unfocus)
         self.new_pass.bind_class("Entry","<Control-a>", select_all)
         self.new_title.grid(row=0,column=0)

@@ -49,8 +49,6 @@ def entry_QOF(input, executed_function, message):
     input.bind("<FocusIn>", clear_entry)
     input.bind("<Return>", entry_enter)
 
-
-
 def error_window(error_message, sw = 750, sh = 100):
     error_window = Toplevel()
     error_icon_path = resource_path("assets/Icons/error.png")
@@ -78,7 +76,6 @@ def error_window(error_message, sw = 750, sh = 100):
     error_message.grid(row=0, column=0)
     okButton.grid(row=1, column=0, sticky="N")
     error_window.focus_set()
-
 
 class Confirmation_Window(Toplevel):
     def __init__(self,parent,message):

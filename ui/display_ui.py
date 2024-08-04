@@ -2,8 +2,6 @@ import tkinter as tk
 from tkinter import ttk
 from typing import OrderedDict
 from utils import helper
-import PIL.Image
-import PIL.ImageTk
 from classes import Profile
 from ui.display_logic import Logic
 import ui.custom_widget_classes as cw
@@ -57,7 +55,11 @@ class Display:
         self.help_menu.add_command(label="Editing an Account", command=self.save_profile)
         self.help_menu.add_command(label="Password Generator", command=self.change_password)
         self.help_menu.add_command(label="Copying a Password", command=self.change_username)
-        # self.help_menu.add_command(label="About", command=self.show_about)
+
+        self.backup_menu = tk.Menu(self.menu_bar, tearoff=0)
+        self.menu_bar.add_cascade(label='Backup', menu=self.backup_menu)
+        self.backup_menu.add_command(label="Backup Locally", command=self.local_backup)
+        self.backup_menu.add_command(label="Google Drive Backup", command=self.drive_backup)
 
         #setting up the styles for treeview
         self.style = ttk.Style()
@@ -263,6 +265,12 @@ class Display:
     
     def exit_app(self):
         self.logic.exit_app()
+    
+    def local_backup(self):
+        self.logic.local_backup()
+    
+    def drive_backup(self):
+        self.logic.drive_backup()
 
     def run(self):
         self.logic.run()

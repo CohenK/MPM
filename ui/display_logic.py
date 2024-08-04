@@ -1,6 +1,8 @@
 import tkinter as tk
+from tkinter import filedialog
 from typing import OrderedDict
 from utils import helper
+from utils.google_drive_util import GoogleDriveClient
 import pyperclip
 from classes import Profile
 import os
@@ -393,13 +395,24 @@ class Logic:
         new_user_window.bind("<Button-1>", focusRoot)
         new_user_window.mainloop()
 
+    def local_backup(self):
+        profile_dir = helper.resource_path('Profile/')
+        filepath = filedialog.asksaveasfilename(title="MPM Backup", initialdir=profile_dir, defaultextension=".enc")
+        helper.write_encrypt_file(filepath,self.profile,self.profile.getPassword())
+        
+    def drive_backup(self):
+        drive = GoogleDriveClient()
+        filepath = helper.resource_path("Profile/"+self.profile.getUser()+".enc")
+        file_id = drive.upload_file(self.root,filepath)
+
     def determine_focus(self):
         try:
             x,y = self.root.winfo_pointerxy()
             currentWidget = self.root.winfo_containing(x,y)
-            if currentWidget not in (self.search_entry,self.current_site,self.current_user,self.current_pass,self.lower_chars,self.upper_chars,self.num_chars,self.special_chars, self.new_password):
+            if currentWidget not in (self.search_entry,self.current_site,self.current_user,self.current_pass,self.lower_chars,self.upper_chars,self.num_chars,self.special_chars, self.new_password, self.menu_bar):
                 self.display_frame.focus_set()
         except Exception as error:
+            print("determine_focus: ")
             print(error)
             
     def run(self):
