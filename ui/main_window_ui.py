@@ -8,7 +8,7 @@ class Main_Window():
     def __init__(self):
         self.root = tk.Tk()
         self.root.geometry("1200x800")
-        programIconPath = helper.resource_path("assets/Icons/lock_and_key.png")
+        programIconPath = helper.resource_path("assets/Icons/logo.png")
         programIcon = PIL.Image.open(programIconPath)
         rProgramIcon = PIL.ImageTk.PhotoImage(programIcon)
         self.root.tk.call('wm', 'iconphoto', self.root._w, rProgramIcon)

@@ -52,6 +52,7 @@ class Login():
         def login_unfocus(event):
             if len(self.login_pass.get()) == 0 or self.login_pass.get() == "(Password)":
                 self.login_pass.configure(show = "")
+                self.login_pass.delete(0,tk.END)
                 self.login_pass.insert(0, "(Password)")
                 self.show_login_password.configure(text="Show Password")
 
@@ -63,6 +64,7 @@ class Login():
         def new_unfocus(event):
             if len(self.new_pass.get()) == 0 or self.new_pass.get() == "(Password)":
                 self.new_pass.configure(show = "")
+                self.new_pass.delete(0,tk.END)
                 self.new_pass.insert(0, "(Password)")
                 self.show_new_password.configure(text="Show Password")
 

@@ -27,7 +27,7 @@ class Display:
 
         self.callback = callback
         self.profile = user_profile
-        self.accounts = self.profile.getAccounts()
+        self.accounts = self.profile.get_accounts()
         self.sorted_dict = OrderedDict()
         self.prev = None
 
@@ -52,14 +52,15 @@ class Display:
 
         self.help_menu = tk.Menu(self.menu_bar, tearoff=0)
         self.menu_bar.add_cascade(label='Help', menu=self.help_menu)
-        self.help_menu.add_command(label="Editing an Account", command=self.save_profile)
-        self.help_menu.add_command(label="Password Generator", command=self.change_password)
-        self.help_menu.add_command(label="Copying a Password", command=self.change_username)
+        self.help_menu.add_command(label="Editing an Account", command=self.edit_help)
+        self.help_menu.add_command(label="Password Generator", command=self.password_help)
+        self.help_menu.add_command(label="Other", command=self.other_help)
 
         self.backup_menu = tk.Menu(self.menu_bar, tearoff=0)
         self.menu_bar.add_cascade(label='Backup', menu=self.backup_menu)
         self.backup_menu.add_command(label="Backup Locally", command=self.local_backup)
         self.backup_menu.add_command(label="Google Drive Backup", command=self.drive_backup)
+        self.backup_menu.add_command(label="Google Drive Reset",command=self.drive_reset)
 
         #setting up the styles for treeview
         self.style = ttk.Style()
@@ -271,6 +272,18 @@ class Display:
     
     def drive_backup(self):
         self.logic.drive_backup()
+
+    def drive_reset(self):
+        self.logic.drive_reset()
+    
+    def edit_help(self):
+        self.logic.edit_help()
+    
+    def password_help(self):
+        self.logic.password_help()
+    
+    def other_help(self):
+        self.logic.other_help()
 
     def run(self):
         self.logic.run()

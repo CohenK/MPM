@@ -5,27 +5,28 @@ class Profile:
         self.user = user
         self.password = password
         self.accounts = defaultdict(dict)
+        self.token = None
 
-    def getUser(self)->str:
+    def get_user(self)->str:
         return self.user
 
-    def getPassword(self)->str:
+    def get_password(self)->str:
         return self.password
-    
-    def setUser(self,user):
+
+    def set_user(self,user):
         self.user = user
 
-    def setPassword(self,password):
+    def set_password(self,password):
         self.password = password
 
-    def addSite(self, site,username, accountPassword):
+    def add_site(self, site,username, accountPassword):
         if site in self.accounts:
             if username in self.accounts[site]:
                 return False
         self.accounts[str(site)][str(username)]=str(accountPassword)
         return True
 
-    def updatePassword(self, site, username, newPassword):
+    def update_password(self, site, username, newPassword):
         if site in self.accounts:
             if username in self.accounts[str(site)]:
                 self.accounts[str(site)][str(username)]=str(newPassword)
@@ -34,22 +35,22 @@ class Profile:
         else:
             print("You do not currently have an account associated with the site: " + site)
 
-    def listSites(self):
+    def list_sites(self):
         sites = []
         for a in self.accounts:
             sites.append(a)
         return sites
 
-    def getAccounts(self):
+    def get_accounts(self):
         return self.accounts
 
-    def listAll(self):
+    def list_all(self):
         for a in self.accounts:
             print(a)
             for b in self.accounts[str(a)]:
                 print(b, ' : ', self.accounts[a][b])
     
-    def searchSite(self, site):
+    def search_site(self, site):
         if site in self.accounts:
             print("Here are the accounts registered with " + site)
             for a in self.accounts[str(site)]:
@@ -57,7 +58,7 @@ class Profile:
         else:
             print("You do not currently have an account associated with the site: " + site)
 
-    def searchUser(self, username):
+    def search_user(self, username):
         result = defaultdict(dict)
         for a in self.accounts:
             if username in self.accounts[a]:
@@ -75,7 +76,7 @@ class Profile:
         """
         return result
 
-    def deleteUser(self, site, username):
+    def delete_user(self, site, username):
         if site in self.accounts:
             if username in self.accounts[site]:
                 del self.accounts[site][username]
@@ -89,7 +90,7 @@ class Profile:
             print("You do not currently have an account associated with the site: " + site)
             return False
 
-    def deleteSite(self, site):
+    def delete_site(self, site):
         if site in self.accounts:
             del self.accounts[site]
         else:

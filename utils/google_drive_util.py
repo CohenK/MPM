@@ -14,10 +14,17 @@ from ui.custom_widget_classes import Popup
 SCOPES = ['https://www.googleapis.com/auth/drive.file']
 
 class GoogleDriveClient:
-    def __init__(self, token_file='token.pickle'):
-        self.credentials_file = helper.resource_path("utils/client_secret_868314137781-m73562gquoduj597folqfg27qu51f14j.apps.googleusercontent.com.json")
-        self.token_file = token_file
+    def __init__(self):
+        self.credentials_file = helper.resource_path("utils/client_secret_986566008811-oiti8hdn0qs7i3i2kb3ialre6s181opl.apps.googleusercontent.com.json")
+        self.token_file = helper.resource_path("utils/token.pickle")
         self.creds = self.get_credentials()
+    
+    def reset_token(self, root):
+        if os.path.exists(self.token_file):
+            os.remove(self.token_file)
+            Popup(root, "Google Drive reset")
+        else:
+            Popup(root, "There is currently no Google Drive associated with this profile.")
 
     def get_credentials(self):
         creds = None
@@ -34,7 +41,7 @@ class GoogleDriveClient:
                 pickle.dump(creds, token)
         return creds
 
-    def upload_file(self, root, file_path):
+    def upload_file(self, file_path, root = None):
         try:
             # Check if file exists
             if not os.path.isfile(file_path):
@@ -48,12 +55,14 @@ class GoogleDriveClient:
             print(f"Uploading file: {file_path}")
             file = service.files().create(body=file_metadata, media_body=media, fields='id').execute()
             message = f"File uploaded successfully. File ID: {file.get('id')}"
-            Popup(root,message)
+            if root:
+                Popup(root,message)
             return file.get('id')
 
         except Exception as e:
-            message = f"An error occurred: {e}"
+            message = f"An error occurred, unable to upload the selected file."
             helper.error_window(message)
+            print(message + " " + e)
             return None
         
     def download_file(self, file_id, dest_path):
@@ -68,5 +77,7 @@ class GoogleDriveClient:
                     print(f"Download {int(status.progress() * 100)}%.")
                 return dest_path
             except Exception as e:
-                print(f"An error occurred: {e}")
+                message = f"An error occurred, unable to download the selected file."
+                helper.error_window(message)
+                print(message + " " + e)
                 return None

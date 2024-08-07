@@ -2,19 +2,14 @@ from tkinter import *
 import sys
 from os import path, getcwd
 import string
-from cryptography.fernet import Fernet
 import PIL.Image
 import PIL.ImageTk
 import pickle
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.hazmat.primitives.hashes import SHA256
-from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
-from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import padding
 import os
-from base64 import urlsafe_b64encode, urlsafe_b64decode
-from getpass import getpass
 import secrets
 import pyperclip
 
@@ -49,7 +44,7 @@ def entry_QOF(input, executed_function, message):
     input.bind("<FocusIn>", clear_entry)
     input.bind("<Return>", entry_enter)
 
-def error_window(error_message, sw = 750, sh = 100):
+def error_window(error_message, sw = 500, sh = 100):
     error_window = Toplevel()
     error_icon_path = resource_path("assets/Icons/error.png")
     error_icon = PIL.Image.open(error_icon_path)
@@ -59,16 +54,18 @@ def error_window(error_message, sw = 750, sh = 100):
     error_window.grid_rowconfigure(0,weight=1)
     error_window.grid_rowconfigure(1,weight=1)
     error_window.grid_columnconfigure(0,weight=1)
+    max_width = error_window.winfo_screenwidth()
+    max_height = error_window.winfo_screenheight()
 
     error_window.title("MPM Error Detected")
-    error_window.minsize(750,100)
-    error_window.maxsize(750,100)
-    window_centering(error_window, 750, 100, error_window.winfo_screenwidth(), error_window.winfo_screenheight())
+    error_window.minsize(750,250)
+    error_window.maxsize(750,250)
+    window_centering(error_window, 750, 250, max_width, max_height)
     
     def kill_error_window():
         error_window.destroy()
 
-    error_message = Label(error_window, text=error_message, font=("Calibri 16 bold"), bg=primary_color)
+    error_message = Label(error_window, text=error_message, font=("Calibri 16 bold"), bg=primary_color, wraplength=500)
     okButton = Button(error_window, bg=thirtiary_light, fg='black', activebackground=thirtiary_color, activeforeground='black', text = "OK", padx=15 ,command =kill_error_window)
     def enterKey(event):
         kill_error_window()
@@ -125,7 +122,11 @@ def generate_password(lower, upper, numbers, special):
     else:
         fill = secrets.SystemRandom().randint(8,15)
         all_chars = lower_chars + upper_chars + number_chars + special_chars
-        password_chars = [ secrets.choice(all_chars) for n in range(fill)]
+        password_chars = ([secrets.choice(lower_chars) for n in range(1)] + 
+                        [secrets.choice(upper_chars) for n in range(1)] + 
+                        [secrets.choice(number_chars) for n in range(1)] + 
+                        [secrets.choice(special_chars) for n in range(1)] +
+                        [ secrets.choice(all_chars) for n in range(fill-4)])
 
     secrets.SystemRandom().shuffle(password_chars)
     return ''.join(password_chars)
@@ -235,7 +236,6 @@ def unfocus_entry(window, entry):
     
     window.bind("<Button-1>", clickOutside)
 
-
 # key = '4YWpaEueGQrKpchPX3tAkT9llZHaF38l1nk1UwU-_Ew='
 # fernetObject = Fernet(key)
 # def encrypt(filepath):
@@ -314,17 +314,15 @@ def read_decrypt_file(file_path: str, password: str):
         deserialized_data = []
 
         decrypted_data = unpadder.update(decrypted_padded_data) + unpadder.finalize()
-        # with open(file_path[:-4], 'wb') as f:
-        #     f.write(decrypted_data)
         deserialized_data = pickle.loads(decrypted_data)
         
         return deserialized_data
 
     except ValueError as e:
-        message = "ValueError. Error: " + str(e)
+        message = "ValueError. Error"
     except (pickle.UnpicklingError, EOFError) as e:
-        message = "Deserialization failed. Error: " + str(e)
+        message = "Deserialization failed. Error"
     except Exception as e:
-        message = "Unknown error. Error: " + str(e)
+        message = "Unknown error. Error"
     
     error_window(message)

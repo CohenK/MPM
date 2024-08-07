@@ -6,4 +6,4 @@ main = Main_Window()
 main.run()
 
 # google = GoogleDriveClient()
-# google.upload_file(helper.resource_path("Profile/Test.enc"))
+# google.upload_file(helper.resource_path("profiles/Test.enc"))

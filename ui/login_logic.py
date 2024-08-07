@@ -34,16 +34,16 @@ class Logic():
             helper.error_window(message, self.screen_width, self.screen_height)
             return
         else:
-            filepath = helper.resource_path(str("Profile/" + user + ".enc"))
+            filepath = helper.resource_path(str("profiles/" + user + ".enc"))
             
             if not exists(filepath):
                 message = "This user does not exists."
                 helper.error_window(message, self.screen_width, self.screen_height)
                 return
 
-            userProfile = helper.read_decrypt_file(filepath, password)
+            user_profile = helper.read_decrypt_file(filepath, password)
             self.main_login_frame.destroy()
-            self.call_display(userProfile)
+            self.call_display(user_profile)
 
     def new_account(self):
         user = self.new_user.get().strip()
@@ -58,7 +58,7 @@ class Logic():
             helper.error_window(message, self.screen_width, self.screen_height)
             return
         else:
-            filepath = helper.resource_path(str("Profile/" + user + ".enc"))
+            filepath = helper.resource_path(str("profiles/" + user + ".enc"))
             if exists(filepath):
                 message = "This user already exists."
                 helper.error_window(message, self.screen_width, self.screen_height)

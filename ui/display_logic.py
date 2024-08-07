@@ -57,7 +57,8 @@ class Logic:
         self.thirtiary_dark = '#804515'
         self.sort_dicts(self.accounts, self.sorted_dict)
         self.insert_records(self.sorted_dict)
-
+        self.drive = GoogleDriveClient()
+        
     def insert_records(self, data):
         count=0
         for site in data:
@@ -74,7 +75,7 @@ class Logic:
     
     def display_current_records(self):
         temp = OrderedDict()
-        accounts = self.profile.getAccounts()
+        accounts = self.profile.get_accounts()
         self.sort_dicts(accounts, temp)
         self.destroy_all_records()
         self.insert_records(temp)
@@ -90,45 +91,11 @@ class Logic:
             if site == '' or user == '' or password == '':
                 helper.error_window("One or more fields is empty.", self.screen_width, self.screen_height)
                 return 
-            if self.profile.addSite(site, user, password):
+            if self.profile.add_site(site, user, password):
                 self.display_current_records()
+                self.prev = None
             else:
                 helper.error_window("Record already exists.", self.screen_width, self.screen_height)
-
-    # def add_tool(self):
-    #     addWindow = tk.Toplevel(bg=self.main_color)
-    #     addWindow.geometry("650x400")
-    #     addWindow.minsize(650, 400)
-    #     helper.window_centering(addWindow, 650, 400, addWindow.winfo_screenwidth(), addWindow.winfo_screenheight())
-
-    #     addWindow.focus_set()
-    #     addWindow.grid_rowconfigure(0, weight=1)
-    #     addWindow.grid_rowconfigure(1, weight=1)
-    #     addWindow.grid_columnconfigure(0, weight=1)
-
-
-    #     addHolder = tk.Frame(addWindow, padx=10, pady=5, relief=tk.SUNKEN, bg='#69A090')
-    #     newSite = tk.Entry(addHolder, font=('Calibri 16'), justify=tk.LEFT, bd=2)
-    #     helper.entry_QOF(newSite, addRecord, "(NEW SITE)")
-    #     newUser = tk.Entry(addHolder, font=('Calibri 16'), justify=tk.LEFT, bd=2)
-    #     helper.entry_QOF(newUser, addRecord, "(NEW USER)")
-    #     newPass = tk.Entry(addHolder, font=('Calibri 16'), justify=tk.LEFT, bd=2)
-    #     helper.entry_QOF(newPass, addRecord, "(NEW PASSWORD)")
-    #     addAdd = tk.Button(addHolder, text="ADD RECORD", bg="#16cca8", fg='black', activeforeground='black', command=addRecord)
-    #     addHolder.grid(row=0, column=0, sticky='NSEW')
-    #     addHolder.grid_rowconfigure(0, weight=2)
-    #     addHolder.grid_rowconfigure(1, weight=1)
-    #     addHolder.grid_rowconfigure(2, weight=1)
-    #     addHolder.grid_rowconfigure(3, weight=2)
-    #     addHolder.grid_columnconfigure(0, weight=1)
-    #     addHolder.grid_columnconfigure(1, weight=1)
-    #     addHolder.grid_columnconfigure(2, weight=1)
-    #     newSite.grid(row=1, column=0, sticky='NSEW')
-    #     newUser.grid(row=1, column=1, sticky='NSEW')
-    #     newPass.grid(row=1, column=2, sticky='NSEW')
-    #     addAdd.grid(row=2, column=0, columnspan=3, sticky='NSEW')
-
-    #     helper.generate_layout(addWindow, newPass, self.screen_width, self.screen_height)
 
     def on_tree_left_click(self,event):
         row = self.tree.identify_row(event.y)
@@ -179,10 +146,10 @@ class Logic:
         self.root.wait_window(dialog)
         if dialog.result.get():
             if site == prev_site and username == prev_username and password != prev_password:
-                self.profile.updatePassword(site,username,password)
+                self.profile.update_password(site,username,password)
             else:
-                if self.profile.addSite(site, username, password):
-                    self.profile.deleteUser(prev_site, prev_username)
+                if self.profile.add_site(site, username, password):
+                    self.profile.delete_user(prev_site, prev_username)
                     self.prev = None
                 else:
                     self.current_site.insert(0,prev_site)
@@ -190,46 +157,6 @@ class Logic:
                     self.current_pass.insert(0,prev_password)
                     helper.error_window("Record already exists.", self.screen_width, self.screen_height)
             self.display_current_records()
-
-    # def edit_tool(self):
-    #     if len(self.tree.selection()) == 0:
-    #         return
-    #     editWindow = tk.Toplevel(padx=5, pady=7, bg=self.main_color)
-    #     editWindow.geometry("550x150")
-    #     editWindow.title("MPM Edit Window")
-    #     editWindow.minsize(550, 150)
-    #     editWindow.maxsize(550, 150)
-    #     helper.window_centering(editWindow, 550, 150, editWindow.winfo_screenwidth(), editWindow.winfo_screenheight())
-    #     editWindow.focus_set()
-    #     editWindow.grid_rowconfigure(0, weight=2)
-    #     editWindow.grid_rowconfigure(1, weight=1)
-    #     editWindow.grid_rowconfigure(2, weight=2)
-    #     editWindow.grid_columnconfigure(0, weight=2, minsize=100)
-    #     editWindow.grid_columnconfigure(1, weight=2, minsize=100)
-    #     editWindow.grid_columnconfigure(2, weight=1)
-
-        
-
-    #     editUserEntry = tk.Entry(editWindow, font=('Calibri 16'), justify=tk.LEFT, bd=2)
-    #     helper.entry_QOF(editUserEntry, edit_account, "(Username to be editted)")
-    #     editUserEntry.grid(row=1, column=0, sticky='NSEW')
-        
-
-    #     editPassEntry = tk.Entry(editWindow, font=('Calibri 16'), justify=tk.LEFT, bd=2)
-    #     helper.entry_QOF(editPassEntry, edit_account, "(Password to be editted)")
-    #     editPassEntry.grid(row=1, column=1, sticky='NSEW')
-        
-            
-    #     edit_button = tk.Button(editWindow, bg="#16cca8", fg='black', activeforeground='black', text='Edit', command=edit_account, width=7)
-    #     edit_button.grid(row=1, column=2, sticky='NSEW')
-    #     def focusRoot(event):
-    #         x,y = editWindow.winfo_pointerxy()
-    #         currentWidget = editWindow.winfo_containing(x,y)
-    #         if not currentWidget == editUserEntry and not currentWidget == editPassEntry:
-    #             editWindow.focus_set()
-    
-    #     editWindow.bind("<Button-1>", focusRoot)
-    #     editWindow.mainloop()
     
     def destroy_all_records(self):
         for row in self.tree.get_children():
@@ -245,7 +172,7 @@ class Logic:
     def query(self):
         username = self.search_entry.get()
         temp = OrderedDict()
-        results = self.profile.searchUser(username)
+        results = self.profile.search_user(username)
         message = ""
         if username == "(username)":
             message = "Nothing entered"
@@ -280,7 +207,7 @@ class Logic:
         dialog = helper.Confirmation_Window(self.root, 'Are you sure you want to make this change?')
         self.root.wait_window(dialog)
         if dialog.result.get():
-            if self.profile.deleteUser(site, username):
+            if self.profile.delete_user(site, username):
                 self.prev = None
                 self.display_current_records()
             else:
@@ -302,8 +229,8 @@ class Logic:
         self.callback()
 
     def save_profile(self):
-        filepath = helper.resource_path(str("Profile/" + self.profile.getUser() + ".enc"))
-        password = self.profile.getPassword()
+        filepath = helper.resource_path(str("profiles/" + self.profile.get_user() + ".enc"))
+        password = self.profile.get_password()
         helper.write_encrypt_file(filepath, self.profile ,password)
     
     def exit_app(self):
@@ -329,8 +256,8 @@ class Logic:
             if dialog.result.get():
                 password = new_pass_entry.get().strip()
                 if password != '(New Password)':
-                    self.profile.setPassword(password)
-                    filepath = helper.resource_path(str("Profile/" + self.profile.getUser() + ".enc"))
+                    self.profile.set_password(password)
+                    filepath = helper.resource_path(str("profiles/" + self.profile.get_user() + ".enc"))
                     helper.write_encrypt_file(filepath, self.profile, password)
                     new_password_window.destroy() 
                 else:
@@ -370,11 +297,11 @@ class Logic:
             if dialog.result.get():
                 user = new_pass_entry.get().strip()
                 if user != '(New Username)':
-                    old = helper.resource_path("Profile/"+ self.profile.getUser() + ".enc")
-                    new = helper.resource_path("Profile/"+ user + ".enc")
-                    self.profile.setUser(user)
+                    old = helper.resource_path("profiles/"+ self.profile.get_user() + ".enc")
+                    new = helper.resource_path("profiles/"+ user + ".enc")
+                    self.profile.set_user(user)
                     os.rename(old, new)
-                    helper.write_encrypt_file(new, self.profile, self.profile.getPassword())
+                    helper.write_encrypt_file(new, self.profile, self.profile.get_password())
                     new_user_window.destroy() 
                 else:
                     helper.error_window("Username cannot be empty.")
@@ -396,14 +323,17 @@ class Logic:
         new_user_window.mainloop()
 
     def local_backup(self):
-        profile_dir = helper.resource_path('Profile/')
+        profile_dir = helper.resource_path('profiles/')
         filepath = filedialog.asksaveasfilename(title="MPM Backup", initialdir=profile_dir, defaultextension=".enc")
-        helper.write_encrypt_file(filepath,self.profile,self.profile.getPassword())
-        
+        helper.write_encrypt_file(filepath,self.profile,self.profile.get_password())
+
     def drive_backup(self):
-        drive = GoogleDriveClient()
-        filepath = helper.resource_path("Profile/"+self.profile.getUser()+".enc")
-        file_id = drive.upload_file(self.root,filepath)
+        filepath = helper.resource_path("profiles/"+self.profile.get_user()+".enc")
+        file_id = self.drive.upload_file(root=self.root,file_path=filepath)
+        return file_id
+    
+    def drive_reset(self):
+        self.drive.reset_token(self.root)
 
     def determine_focus(self):
         try:
@@ -414,6 +344,63 @@ class Logic:
         except Exception as error:
             print("determine_focus: ")
             print(error)
-            
+
+    def edit_help(self):
+        help = tk.Toplevel()
+        help.overrideredirect(True)
+        help.config(background=self.primary_light)
+        help.minsize(750,500)
+        help.maxsize(750,500)
+        helper.window_centering(help,500,75,help.winfo_screenwidth(),help.winfo_screenheight())
+        help.grid_rowconfigure(0, weight=1)
+        help.grid_rowconfigure(1,weight=1)
+        help.grid_columnconfigure(0, weight=1)
+        message = ("To edit your main account go to Settings > Edit Password or Settings > Edit Username, \n " +
+                   "To edit each individual username and/or site, please select them from the list and this will \n" + 
+                   "auto populate the commands section where you can make edits and/or deletion by clicking the respective buttons. \n" + 
+                   "You can also type in a brand new site, username and password and use the \"add\" button to add a brand new record.")
+        tk.Label(help, text=message, bg=self.primary_light, fg=self.secondary_dark).grid(row=0, column=0)
+        tk.Button(help, text="OK", font=['Calibri','12'], bg=self.thirtiary_light, fg='black', activebackground=self.thirtiary_color, activeforeground='black',command=lambda event: help.destroy()).grid(row=1, column=0)
+    
+    def password_help(self):
+        help = tk.Toplevel()
+        help.overrideredirect(True)
+        help.config(background=self.primary_light)
+        help.minsize(750,500)
+        help.maxsize(750,500)
+        helper.window_centering(help,500,75,help.winfo_screenwidth(),help.winfo_screenheight())
+        help.grid_rowconfigure(0, weight=1)
+        help.grid_rowconfigure(1,weight=1)
+        help.grid_columnconfigure(0, weight=1)
+        message = ("Included in this application is a password generation feature located at the bottom, \n " +
+                   "passwords generated from this tool are cryptographically secure and automatically added \n" + 
+                   "to your clipboard, so you can just paste this into the password field in the above section \n" +
+                   "to use them. There are three optional fields in the password generation tool section labeled: \n" + 
+                   "lower, upper, number, and special. These corresponds to the number of these respective characters \n" + 
+                   "that you would like to include in the password that you generate. \n \n" + 
+                   "For example if at the time of the generate button being clicked there is a: \n" +
+                   " 1, 2, 3 and 4 in the respective fields, the generated password will have: \n" + 
+                   "1 lower case, 2 upper case, 3 numbers and 4 special characters. \n" +
+                   "If no input is present the generator will randomly generate a password that \n" + 
+                   "is 8-15 characters long and include at least 1 of each type of character.")
+        tk.Label(help, text=message, bg=self.primary_light, fg=self.secondary_dark).grid(row=0, column=0)
+        tk.Button(help, text="OK", font=['Calibri','12'], bg=self.thirtiary_light, fg='black', activebackground=self.thirtiary_color, activeforeground='black',command=lambda event: help.destroy()).grid(row=1, column=0)
+    
+    def other_help(self):
+        help = tk.Toplevel()
+        help.overrideredirect(True)
+        help.config(background=self.primary_light)
+        help.minsize(750,500)
+        help.maxsize(750,500)
+        helper.window_centering(help,500,75,help.winfo_screenwidth(),help.winfo_screenheight())
+        help.grid_rowconfigure(0, weight=1)
+        help.grid_rowconfigure(1,weight=1)
+        help.grid_columnconfigure(0, weight=1)
+        message = ("If there are any other questions that have not been answered in the other help sections \n" + 
+                   "please visit https://github.com/CohenK/PassMan for a more detailed explanation guide on how \n" + 
+                   "to use this application or email the developer at kangcohen@gmail.com, thank you for using MPM.")
+        tk.Label(help, text=message, bg=self.primary_light, fg=self.secondary_dark).grid(row=0, column=0)
+        tk.Button(help, text="OK", font=['Calibri','12'], bg=self.thirtiary_light, fg='black', activebackground=self.thirtiary_color, activeforeground='black',command=lambda event: help.destroy()).grid(row=1, column=0)
+
     def run(self):
         self.root.mainloop()
