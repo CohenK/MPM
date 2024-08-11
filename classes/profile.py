@@ -6,6 +6,19 @@ class Profile:
         self.password = password
         self.accounts = defaultdict(dict)
         self.token = None
+        self.drive = None
+
+    def get_token(self):
+        return self.token
+    
+    def set_token(self, token):
+        self.token = token
+    
+    def get_drive(self):
+        return self.drive
+    
+    def set_drive(self, drive):
+        self.drive = drive
 
     def get_user(self)->str:
         return self.user

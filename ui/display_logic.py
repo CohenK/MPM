@@ -6,6 +6,7 @@ from utils.google_drive_util import GoogleDriveClient
 import pyperclip
 from classes import Profile
 import os
+from ui.custom_widget_classes import Popup
 
 class Logic:
     def __init__(self, root:tk.Tk, display_frame, menu_bar, tree,search_entry,search_button,back_button,
@@ -57,7 +58,6 @@ class Logic:
         self.thirtiary_dark = '#804515'
         self.sort_dicts(self.accounts, self.sorted_dict)
         self.insert_records(self.sorted_dict)
-        self.drive = GoogleDriveClient()
         
     def insert_records(self, data):
         count=0
@@ -328,12 +328,19 @@ class Logic:
         helper.write_encrypt_file(filepath,self.profile,self.profile.get_password())
 
     def drive_backup(self):
+        if not self.profile.get_drive():
+            self.profile.set_drive(GoogleDriveClient())
+
         filepath = helper.resource_path("profiles/"+self.profile.get_user()+".enc")
-        file_id = self.drive.upload_file(root=self.root,file_path=filepath)
+        drive = self.profile.get_drive()
+        file_id = drive.upload_file(root=self.root, file_path=filepath)
         return file_id
     
     def drive_reset(self):
-        self.drive.reset_token(self.root)
+        if self.profile.get_drive():
+            self.profile.set_drive(None)
+        else:
+            Popup(self.root, "There is currently no Google Drive associated with this profile.")
 
     def determine_focus(self):
         try:

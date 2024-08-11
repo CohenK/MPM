@@ -2,7 +2,6 @@ from utils import helper
 import tkinter as tk
 from os.path import exists
 from classes import Profile
-from ui.display_ui import Display
 
 class Logic():
     def __init__(self, root, main_login_frame, call_display, login_user, login_pass, login_button, show_login_password,

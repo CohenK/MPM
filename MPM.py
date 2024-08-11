@@ -1,9 +1,5 @@
-from ui.main_window_ui import Main_Window
-from utils.google_drive_util import GoogleDriveClient
-from utils import helper
+from ui import *
 
-main = Main_Window()
-main.run()
-
-# google = GoogleDriveClient()
-# google.upload_file(helper.resource_path("profiles/Test.enc"))
+if __name__ == "__main__":
+    app = Main_Window()
+    app.run()

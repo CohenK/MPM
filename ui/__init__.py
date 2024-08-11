@@ -1,6 +1,5 @@
-from .login_ui import Login
-from .display_ui import Display
+from .main_window_ui import Main_Window
 
 __all__ = [
-    'Login', 'Display'
+    'Main_Window'
 ]

@@ -1,11 +1,5 @@
 import tkinter as tk
-from tkinter import ttk
-from os.path import exists
-from classes import Profile
 from utils import helper
-import PIL.Image
-import PIL.ImageTk
-from ui.display_ui import Display
 from ui.login_logic import Logic
 
 primary_lighter = '#226666'

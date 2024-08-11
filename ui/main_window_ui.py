@@ -1,8 +1,8 @@
 import tkinter as tk
 import PIL.Image, PIL.ImageTk
 from utils import helper
-from ui import *
-from classes import profile
+from ui.login_ui import Login
+from ui.display_ui import Display
 
 class Main_Window():
     def __init__(self):
