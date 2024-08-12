@@ -30,6 +30,7 @@ class Display:
         self.accounts = self.profile.get_accounts()
         self.sorted_dict = OrderedDict()
         self.prev = None
+        self.usernames = self.profile.get_usernames()
 
         #setting up root and its properties
         self.root = root
@@ -134,7 +135,7 @@ class Display:
         self.commands.grid_columnconfigure(3, weight=1)
 
         self.current_site = tk.Entry(self.commands, font=('Calibri 16'), justify=tk.LEFT,bd=2)
-        self.current_user = tk.Entry(self.commands, font=('Calibri 16'), justify=tk.LEFT,bd=2)
+        self.current_user = cw.Autocomplete_Combobox(self.commands, font=('Calibri 16'), justify=tk.LEFT)
         self.current_pass = tk.Entry(self.commands, font=('Calibri 16'), justify=tk.LEFT,bd=2)
         self.clear_button = tk.Button(self.commands, bg=self.thirtiary_light, fg='black', activebackground=self.thirtiary_color, activeforeground='black', text='CLEAR', command=self.clear_current_selected, width=12, height=1)
         
@@ -150,6 +151,8 @@ class Display:
         self.edit_button.grid(row=1, column=0, sticky='NSEW', padx=5, pady=5)
         self.delete_button.grid(row=1, column=1, sticky='NSEW', padx=5, pady=5)
         self.add_button.grid(row=1, column=2, sticky='NSEW', padx=5, pady=5)
+        # assigning all usernames to combobox for autofill
+        self.current_user.set_list(self.usernames)
 
         #setting up password generator section
         self.password_generator = tk.LabelFrame(self.display_frame, text="Password Generator", padx=10, pady=10, bd=3, bg=self.primary_color)

@@ -94,6 +94,8 @@ class Logic:
             if self.profile.add_site(site, user, password):
                 self.display_current_records()
                 self.prev = None
+                # get all usernames again and refresh current_user's list for autofill
+                self.current_user.set_list(self.profile.get_usernames())
             else:
                 helper.error_window("Record already exists.", self.screen_width, self.screen_height)
 
@@ -102,16 +104,15 @@ class Logic:
         if not row:
             self.clear_current_selected()
             self.tree.selection_remove(self.tree.selection())
-            self.prev = None
             self.display_frame.focus()
         else:
+            self.clear_current_selected()
             self.tree.focus(row)
             record = self.tree.item(self.tree.focus())
-            self.prev = record
             site=record['values'][0]
             username=record['values'][1]
             password=record['values'][2]
-            self.clear_current_selected()
+            self.prev = record
             self.current_site.insert(0, site)
             self.current_user.insert(0, username)
             self.current_pass.insert(0, password)
@@ -120,6 +121,8 @@ class Logic:
         self.current_site.delete(0, tk.END)
         self.current_user.delete(0, tk.END)
         self.current_pass.delete(0, tk.END)
+        self.prev = None
+        self.tree.selection_remove(self.tree.selection())
     
     def edit_account(self):
         if not self.prev:

@@ -5,14 +5,7 @@ class Profile:
         self.user = user
         self.password = password
         self.accounts = defaultdict(dict)
-        self.token = None
         self.drive = None
-
-    def get_token(self):
-        return self.token
-    
-    def set_token(self, token):
-        self.token = token
     
     def get_drive(self):
         return self.drive
@@ -57,36 +50,18 @@ class Profile:
     def get_accounts(self):
         return self.accounts
 
-    def list_all(self):
+    def get_usernames(self):
+        usernames = set()
         for a in self.accounts:
-            print(a)
             for b in self.accounts[str(a)]:
-                print(b, ' : ', self.accounts[a][b])
-    
-    def search_site(self, site):
-        if site in self.accounts:
-            print("Here are the accounts registered with " + site)
-            for a in self.accounts[str(site)]:
-                print(a, ':', self.accounts[site][a])
-        else:
-            print("You do not currently have an account associated with the site: " + site)
+                usernames.add(b)
+        return usernames
 
     def search_user(self, username):
         result = defaultdict(dict)
         for a in self.accounts:
             if username in self.accounts[a]:
                 result[a][username]=self.accounts[a][username]
-        """
-        if len(result) == 0:
-            print("There are no accounts under " + username + " stored in this program")
-            return
-        else:
-            print("Here are the list of accounts under " + username + " grouped by their associated site and passwords")
-            for site in self.accounts:
-                print(site)
-                for user in result[str(site)]:
-                    print(user, ' : ', self.accounts[site][user])
-        """
         return result
 
     def delete_user(self, site, username):
