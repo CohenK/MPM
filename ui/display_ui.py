@@ -32,6 +32,17 @@ class Display:
         self.prev = None
         self.usernames = self.profile.get_usernames()
 
+        # some functions for bindings
+        def select_all(event):
+            event.widget.select_range(0,tk.END)
+            event.widget.icursor(tk.END)
+        def on_focus(entry):
+            entry.delete(0,tk.END)
+        def focus_out(entry, message):
+            text = entry.get().strip()
+            if text == '':
+                entry.insert(0,message)
+
         #setting up root and its properties
         self.root = root
         self.root.protocol("WM_DELETE_WINDOW", self.exit_app)
@@ -67,7 +78,7 @@ class Display:
         self.style = ttk.Style()
         self.style.theme_use("default")
         self.style.configure('Treeview.Heading', background=self.secondary_lighter, padding=(0,5))
-        self.style.configure('Treeview', rowheight=30, background=self.secondary_light, foreground = self.secondary_dark, activeforeground=self.secondary_dark, fieldbackground = self.secondary_light)
+        self.style.configure('Treeview', font=('Calibri 13'), rowheight=30, background=self.secondary_light, foreground = self.secondary_dark, activeforeground=self.secondary_dark, fieldbackground = self.secondary_light)
         self.style.map("Treeview", background=[('selected', self.secondary_color)])
 
         #make display frame
@@ -100,8 +111,6 @@ class Display:
         self.tree.heading('Site', text="Site", anchor=tk.W)
         self.tree.heading('User', text="User", anchor=tk.W)
         self.tree.heading('Password', text="Password", anchor=tk.W)
-        self.tree.tag_configure('oddrow', background=self.primary_darker)
-        self.tree.tag_configure('evenrow', background=self.primary_lighter)
         self.tree.bind("<Button-1>", self.on_tree_left_click)
 
         #setting up search section
@@ -153,6 +162,7 @@ class Display:
         self.add_button.grid(row=1, column=2, sticky='NSEW', padx=5, pady=5)
         # assigning all usernames to combobox for autofill
         self.current_user.set_list(self.usernames)
+        self.current_user.bind("<Control-a>", select_all)
 
         #setting up password generator section
         self.password_generator = tk.LabelFrame(self.display_frame, text="Password Generator", padx=10, pady=10, bd=3, bg=self.primary_color)
@@ -179,16 +189,6 @@ class Display:
         self.special_chars.grid(row=0, column=3, sticky='NSEW', padx=5, pady=5)
         self.generate_button.grid(row=0, column=4, sticky='NSEW', padx=5, pady=5)
         self.new_password.grid(row=0, column=5, sticky='NSEW', padx=5, pady=5)
-
-        def select_all(event):
-            event.widget.select_range(0,tk.END)
-            event.widget.icursor(tk.END)
-        def on_focus(entry):
-            entry.delete(0,tk.END)
-        def focus_out(entry, message):
-            text = entry.get().strip()
-            if text == '':
-                entry.insert(0,message)
 
         self.lower_chars.insert(0,'lower')
         self.upper_chars.insert(0,'upper')

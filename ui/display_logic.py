@@ -328,7 +328,8 @@ class Logic:
     def local_backup(self):
         profile_dir = helper.resource_path('profiles/')
         filepath = filedialog.asksaveasfilename(title="MPM Backup", initialdir=profile_dir, defaultextension=".enc")
-        helper.write_encrypt_file(filepath,self.profile,self.profile.get_password())
+        if filepath:
+            helper.write_encrypt_file(filepath,self.profile,self.profile.get_password())
 
     def drive_backup(self):
         if not self.profile.get_drive():
@@ -343,7 +344,7 @@ class Logic:
         if self.profile.get_drive():
             self.profile.set_drive(None)
         else:
-            Popup(self.root, "There is currently no Google Drive associated with this profile.")
+            Popup(self.root, "There is currently no Google Drive associated with this profile.", width=650)
 
     def determine_focus(self):
         try:

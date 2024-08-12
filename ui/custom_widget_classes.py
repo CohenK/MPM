@@ -39,13 +39,13 @@ class Custom_Treeview(ttk.Treeview):
         popup.update_idletasks()
 
 class Popup(tk.Toplevel):
-    def __init__(self,parent:tk.Tk,notification, **kw):
+    def __init__(self,parent:tk.Tk,notification, width = 500, height=75, **kw):
         super().__init__(parent, **kw)
         self.overrideredirect(True)
         self.config(background=primary_light)
-        self.minsize(500,75)
-        self.maxsize(500,75)
-        helper.window_centering(self,500,75,self.winfo_screenwidth(),self.winfo_screenheight())
+        self.minsize(width,height)
+        self.maxsize(width,height)
+        helper.window_centering(self,width,height,self.winfo_screenwidth(),self.winfo_screenheight())
         self.rowconfigure(0, weight=1)
         self.columnconfigure(0, weight=1)
         tk.Label(self, text=notification, font=['Calibri','12','bold'], bg=primary_light, fg=secondary_dark).grid(row=0, column=0)
