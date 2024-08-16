@@ -6,11 +6,12 @@
 - [Running the App](#running-the-app)
 - [Features](#features)
 - [Usage](#usage)
+- [Notes](#notes)
 - [Contact](#contact)
 
 ## About
 
-MPM (MyPasswordManager) is a password manager with a built in password generator that stores user data locally using cryptographic encryption from the python Cryptography library to limit the ways your passwords can be leaked onto the internet.
+MPM (MyPasswordManager) is a password manager with a built in password generator that stores user data locally using cryptographic encryption from the python Cryptography library with options to backup via Google Drive. This is a **free** software and all that is asked is that if you like the app, please share it with your friends and family!
 
 ## Running the App
 
@@ -44,7 +45,7 @@ MPM (MyPasswordManager) is a password manager with a built in password generator
     - at least one number character
     - at least special character
     - password is 8-15 characters long
-  - Once the generate button is clicked, the password will be generated and copied into your clipboard, which you can then simply paste anywhere you would like
+  - Once the generate button is clicked, the password will be generated and copied into your clipboard, which you can then simply paste anywhere you would like.
 
 - Multiple profiles
 
@@ -73,17 +74,21 @@ MPM (MyPasswordManager) is a password manager with a built in password generator
     - If the user tries to add a new credential matching a pre-existing one, the program will throw an error.
     - If the user edits a pre-existing credential in a way that it matches another pre-existing credential, the program will throw an error. 
 
-- Profile username and password change can be done in the menu after login in the settings tab
+- Profile username and password change can be done in the menu after login in the settings tab.
 
 - Backup
 
-  - A user can backup their profile locally via the menu after logging in and selecting Menu > Backup > Local Backup in the menu bar. A file explorer window will open and the user will provide the name and select the directory in which they desire to backup.
+  - A user can backup their profile locally via the menu after logging in and selecting **Menu > Backup > Local** Backup in the menu bar. A file explorer window will open and the user will provide the name and select the directory in which they desire to backup.
 
-  - A user is also able to backup via Google drive by selecting Menu > Backup > Google Drive after logging in. The internet browser will be opened for the user to login to their google drive account. Once authentication is complete, the user will be able to upload their back up profiles.
+  - A user is also able to backup via Google drive by selecting **Menu > Backup > Google Drive** after logging in. The internet browser will be opened for the user to login to their google drive account. Once authentication is complete, the user will be able to upload their back up profiles.
 
   - To use a backup file simply place any backup files into the profile directories and you can login to them using the file name without the extension as the username and the password associated with the backup file.
 
-  - If the user prefers to sever the current link to their google drive, either for security reasons or to link with a different google account, they can select Menu > Backup > Google Drive Reset
+  - If the user prefers to sever the current link to their google drive, either for security reasons or to link with a different google account, they can select **Menu > Backup > Google Drive Reset**.
+
+## Notes
+
+- The app saves your profile information on logout and on exit via the close button on the top right corner. However if any unexpected power outages or system error occurs, it does not save in these situations. With this in mind please if there are large amounts of new entries or edits please save your profile periodically via **Settings > Save**.
 
 ## Contact
 
