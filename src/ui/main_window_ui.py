@@ -3,13 +3,12 @@ import PIL.Image, PIL.ImageTk
 from src.utils import helper
 from src.ui.login_ui import Login
 from src.ui.display_ui import Display
-import sys, os
 
 class Main_Window():
     def __init__(self):
         self.root = tk.Tk()
         self.root.geometry("1200x800")
-        programIconPath = resource_path(helper.resource_path("assets/Icons/logo.png"))
+        programIconPath = helper.resource_path("assets/Icons/logo.png")
         programIcon = PIL.Image.open(programIconPath)
         rProgramIcon = PIL.ImageTk.PhotoImage(programIcon)
         self.root.tk.call('wm', 'iconphoto', self.root._w, rProgramIcon)
