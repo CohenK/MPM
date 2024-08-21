@@ -146,7 +146,6 @@ class Logic:
         self.clear_current_selected()
 
         dialog = Confirmation_Window(self.root, 'Are you sure you want to make this change?')
-        self.root.wait_window(dialog)
         if dialog.result.get():
             if site == prev_site and username == prev_username and password != prev_password:
                 self.profile.update_password(site,username,password)
@@ -208,7 +207,6 @@ class Logic:
             Error_Window("Incomplete record information.")
             return
         dialog = Confirmation_Window(self.root, 'Are you sure you want to make this change?')
-        self.root.wait_window(dialog)
         if dialog.result.get():
             if self.profile.delete_user(site, username):
                 self.prev = None

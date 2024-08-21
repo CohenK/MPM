@@ -136,7 +136,7 @@ class Error_Window(tk.Toplevel):
 
 class Confirmation_Window(tk.Toplevel):
     def __init__(self,parent,message):
-        super().__init__(parent)
+        super().__init__(master=parent)
         self.result = tk.BooleanVar()
         self.title("MPM Confirmation")
         self.geometry("750x100")
